@@ -1,6 +1,6 @@
 {
     "name": "vinelab/http",
-    "description": "An http library developed for the laravel framework. Populates itself as HttpClient (as alias)",
+    "description": "An http library developed for the laravel framework. aliases itself as HttpClient",
     "license": "MIT",
     "authors": [
         {
