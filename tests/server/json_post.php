@@ -2,7 +2,7 @@
 
 if (isset($_SERVER['HTTP_CONTENT_TYPE']) and $_SERVER['HTTP_CONTENT_TYPE'] === 'application/json')
 {
-	$result = $_POST;
+	$result = json_decode(file_get_contents("php://input"), true);
 	$result['json_header'] = true;
-	print json_encode($result);
+	return print json_encode($result);
 }

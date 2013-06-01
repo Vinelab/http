@@ -84,7 +84,7 @@ Class Request implements RequestInterface{
 		if ($this->method === static::method('POST'))
 		{
 			$cURLOptions[CURLOPT_POST] = count($this->params);
-			$cURLOptions[CURLOPT_POSTFIELDS] = http_build_query($this->params);
+			$cURLOptions[CURLOPT_POSTFIELDS] = ($this->json) ? json_encode($this->params) : http_build_query($this->params);
 
 		} elseif (count($this->params) > 0) {
 			$this->url = $this->url.'?'.http_build_query($this->params);

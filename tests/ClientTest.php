@@ -114,7 +114,7 @@ Class ClientTest extends PHPUnit_Framework_TestCase {
 	public function testPostJSONRequest()
 	{
 		$request = [
-			'url' => 'http://'.static::serverURL().'/post.php',
+			'url' => 'http://'.static::serverURL().'/json_post.php',
 			'params' => [
 
 				'id'     => '12350ME1D',
@@ -127,11 +127,10 @@ Class ClientTest extends PHPUnit_Framework_TestCase {
 
 		$content = $this->client->post($request)->json();
 
+		$this->assertInstanceOf('stdClass', $content);
 		$this->assertObjectHasAttribute('id', $content, 'Should return the id param');
 		$this->assertObjectHasAttribute('lang', $content, 'Should return the lang param');
 		$this->assertObjectHasAttribute('format', $content, 'Should return the format param');
-		// this one is added by the server
-		$this->assertObjectHasAttribute('json_header', $content, 'This should be returned when sending with a JSON header');
 	}
 
 	public static function bootUpBuiltInServer()
