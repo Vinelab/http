@@ -1,3 +1,5 @@
+![build status](https://travis-ci.org/Vinelab/http.png?branch=master "build status")
+
 ## Vinelab Http Library for Laravel 4
 
 Handles server-to-server connections.
