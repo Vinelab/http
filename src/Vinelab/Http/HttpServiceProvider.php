@@ -28,7 +28,7 @@ class HttpServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		$this->app['client'] = $this->app->share(function($app){
+		$this->app['httpClient'] = $this->app->share(function($app){
 			return new Client;
 		});
 

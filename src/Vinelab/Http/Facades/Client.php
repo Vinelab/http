@@ -9,6 +9,6 @@ Class Client extends Facade {
 	 *
 	 * @return string
 	 */
-	protected static function getFacadeAccessor() { return 'client'; }
+	protected static function getFacadeAccessor() { return 'httpClient'; }
 
 }
