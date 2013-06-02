@@ -5,7 +5,7 @@
 Handles server-to-server connections.
 
 ## Installation
-Refer to [Vinelab/http on packagist.org](https://packagist.org/search/?q=vinelab%2Fhttp) for composer installation instructions.
+Refer to [vinelab/http on packagist.org](https://packagist.org/packages/vinelab/http) for composer installation instructions.
 
 Edit **app.php** and add ```'Vinelab\Http\HttpServiceProvider',``` to the ```'providers'``` array.
 
