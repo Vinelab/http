@@ -83,5 +83,6 @@ It will automatically alias itself as **HttClient** so no need to aslias it in y
 
 #### TODO
 - Improve tests to include testing all the methods of response (like statusCode...)
+- Include tests for handling bad data / errors
 - Improve tests to include testing for all HTTP Verbs
 - Improve support for XML requests (left till needed)
