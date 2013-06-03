@@ -9,15 +9,6 @@ Class ClientTest extends PHPUnit_Framework_TestCase {
 	static $serverHost = 'localhost';
 	static $serverPort = '6767';
 
-	public static function setUpBeforeClass()
-	{
-		static::bootUpBuiltInServer();
-	}
-
-	public static function tearDownAfterClass()
-	{
-		static::turnDownBuiltInServer();
-	}
 
 	public function setUp()
 	{
@@ -89,7 +80,7 @@ Class ClientTest extends PHPUnit_Framework_TestCase {
 	public function testPostRequestWithoutParams()
 	{
 		$request = ['url'=>'http://'.static::serverURL().'/post.php'];
-		$this->assertNotNull($this->client->get($request)->content());
+		$this->assertNotNull($this->client->post($request)->content());
 	}
 
 	public function testPostRequestWithparams()
@@ -133,6 +124,9 @@ Class ClientTest extends PHPUnit_Framework_TestCase {
 		$this->assertObjectHasAttribute('format', $content, 'Should return the format param');
 	}
 
+	/**
+	 * @beforeClass
+	 */
 	public static function bootUpBuiltInServer()
 	{
 		shell_exec('php -S '.static::serverURL().' -t ./tests/server > /dev/null 2>&1 & echo $! >> '.static::$pidfile);
@@ -140,6 +134,9 @@ Class ClientTest extends PHPUnit_Framework_TestCase {
 		sleep(2);
 	}
 
+	/**
+	 * @afterClass
+	 */
 	public static function turnDownBuiltInServer()
 	{
 		$filename = static::$pidfile;
