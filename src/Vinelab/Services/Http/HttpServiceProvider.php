@@ -1,4 +1,4 @@
-<?php namespace Vinelab\Http;
+<?php namespace Vinelab\Services\Http;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -35,7 +35,7 @@ class HttpServiceProvider extends ServiceProvider {
 		$this->app->booting(function() {
 
 			$loader = \Illuminate\Foundation\AliasLoader::getInstance();
-			$loader->alias('HttpClient', 'Vinelab\Http\Facades\Client');
+			$loader->alias('HttpClient', 'Vinelab\Services\Http\Facades\Client');
 		});
 	}
 

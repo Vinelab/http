@@ -1,6 +1,6 @@
-<?php namespace Vinelab\Http;
+<?php namespace Vinelab\Services\Http;
 
-use Vinelab\Http\Contracts\ResponseInterface;
+use Vinelab\Services\Http\Contracts\ResponseInterface;
 
 Class Response implements ResponseInterface {
 

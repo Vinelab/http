@@ -1,6 +1,6 @@
-<?php namespace Vinelab\Http;
+<?php namespace Vinelab\Services\Http;
 
-use Vinelab\Http\Contracts\RequestInterface;
+use Vinelab\Services\Http\Contracts\RequestInterface;
 
 Class Request implements RequestInterface{
 

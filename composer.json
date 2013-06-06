@@ -22,7 +22,7 @@
 	"autoload": {
 
 		"psr-0": {
-			"Vinelab\\Http": "src/"
+			"Vinelab\\Services\\Http": "src/"
 		}
 	},
 	"minimum-stability": "dev"

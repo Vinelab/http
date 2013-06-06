@@ -1,4 +1,4 @@
-<?php namespace Vinelab\Http;
+<?php namespace Vinelab\Services\Http;
 
 Class Client {
 
