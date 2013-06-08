@@ -9,6 +9,6 @@ Class Client extends Facade {
 	 *
 	 * @return string
 	 */
-	protected static function getFacadeAccessor() { return 'httpClient'; }
+	protected static function getFacadeAccessor() { return 'vinelab.httpclient'; }
 
 }
