@@ -1,6 +1,6 @@
 <?php
 
-use Vinelab\Services\Http\Client;
+use Vinelab\Http\Client;
 use Mockery as M;
 
 Class ClientTest extends PHPUnit_Framework_TestCase {

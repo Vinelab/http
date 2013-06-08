@@ -1,4 +1,4 @@
-<?php namespace Vinelab\Services\Http\Contracts;
+<?php namespace Vinelab\Http\Contracts;
 
 /**
  * A HTTP Client

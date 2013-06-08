@@ -1,4 +1,4 @@
-<?php namespace Vinelab\Services\Http\Facades;
+<?php namespace Vinelab\Http\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
