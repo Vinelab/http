@@ -78,7 +78,9 @@ Class Request implements RequestInterface{
 			CURLOPT_RETURNTRANSFER => $this->returnTransfer,
 			CURLOPT_HTTPHEADER     => $this->headers,
 			CURLOPT_HEADER         => true,
-			CURLINFO_HEADER_OUT    => true
+			CURLINFO_HEADER_OUT    => true,
+			CURLOPT_FOLLOWLOCATION => true,
+			CURLOPT_MAXREDIRS      => 50
 		);
 
 		if ($this->method === static::method('POST'))
