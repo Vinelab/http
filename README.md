@@ -9,7 +9,7 @@ Refer to [vinelab/http on packagist.org](https://packagist.org/packages/vinelab/
 
 Edit **app.php** and add ```'Vinelab\Http\HttpServiceProvider',``` to the ```'providers'``` array.
 
-It will automatically alias itself as **HttClient** so no need to aslias it in your **app.php** unless you would like to customize it. In that case edit your **'aliases'** in **app.php** adding ``` 'MyHttp'	  => 'Vinelab\Http\Facades\Client',```
+It will automatically alias itself as **HttpClient** so no need to alias it in your **app.php** unless you would like to customize it. In that case edit your **'aliases'** in **app.php** adding ``` 'MyHttp'	  => 'Vinelab\Http\Facades\Client',```
 
 ## Usage
 
