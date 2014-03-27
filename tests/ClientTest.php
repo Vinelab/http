@@ -9,6 +9,15 @@ Class ClientTest extends PHPUnit_Framework_TestCase {
 	static $serverHost = 'localhost';
 	static $serverPort = '6767';
 
+	public static function setUpBeforeClass()
+	{
+		static::bootUpBuiltInServer();
+	}
+
+	public static function tearDownAfterClass()
+	{
+		static::turnDownBuiltInServer();
+	}
 
 	public function setUp()
 	{
