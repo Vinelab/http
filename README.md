@@ -1,6 +1,6 @@
-![build status](https://travis-ci.org/Vinelab/http.png?branch=master "build status")
-
 ## Vinelab Http Library for Laravel 4
+![build status](https://travis-ci.org/Vinelab/http.png?branch=master "build status")
+![Codeshipt Build Status](https://www.codeship.io/projects/a3d14930-c970-0131-6192-227098611d1d/status)
 
 Handles server-to-server connections.
 
