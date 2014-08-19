@@ -2,8 +2,6 @@
 
 [![Dependency Status](https://www.versioneye.com/user/projects/53efc9a613bb06cc6f0004b0/badge.svg?style=flat)](https://www.versioneye.com/user/projects/53efc9a613bb06cc6f0004b0)
 
-![Codeshipt Build Status](https://www.codeship.io/projects/a3d14930-c970-0131-6192-227098611d1d/status)
-
 # http://Client
 
 A smart and simple HTTP client for JSON and XML.
