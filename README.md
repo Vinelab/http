@@ -1,15 +1,36 @@
-## Vinelab Http Library for Laravel 4
 ![build status](https://travis-ci.org/Vinelab/http.png?branch=master "build status")
+
 ![Codeshipt Build Status](https://www.codeship.io/projects/a3d14930-c970-0131-6192-227098611d1d/status)
 
-Handles server-to-server connections.
+# http://Client
+
+A smart and simple HTTP client for JSON and XML.
 
 ## Installation
-Refer to [vinelab/http on packagist.org](https://packagist.org/packages/vinelab/http) for composer installation instructions.
+
+### Composer
+
+- `"vinelab/http": "dev-master"` or refer to [vinelab/http on packagist.org](https://packagist.org/packages/vinelab/http) for the latest version installation instructions.
+
+```php
+// change this to point correctly according
+// to your folder structure.
+require './vendor/autoload.php';
+
+use Vinelab\Http\Client as HttpClient;
+
+$client = new HttpClient;
+
+$response = $client->get('echo.jsontest.com/key/value/something/here');
+
+var_dump($response->json());
+```
+
+### Laravel
 
 Edit **app.php** and add ```'Vinelab\Http\HttpServiceProvider',``` to the ```'providers'``` array.
 
-It will automatically alias itself as **HttpClient** so no need to alias it in your **app.php** unless you would like to customize it. In that case edit your **'aliases'** in **app.php** adding ``` 'MyHttp'	  => 'Vinelab\Http\Facades\Client',```
+It will automatically alias itself as **HttpClient** so no need to alias it in your **app.php**, unless you would like to customize it - in that case edit your **'aliases'** in **app.php** adding ``` 'MyHttp'	  => 'Vinelab\Http\Facades\Client',```
 
 ## Usage
 
@@ -85,4 +106,3 @@ It will automatically alias itself as **HttpClient** so no need to alias it in y
 - Improve tests to include testing all the methods of response (like statusCode...)
 - Include tests for handling bad data / errors
 - Improve tests to include testing for all HTTP Verbs
-- Improve support for XML requests (left till needed)
