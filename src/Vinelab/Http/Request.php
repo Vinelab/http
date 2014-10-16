@@ -75,6 +75,7 @@ Class Request implements RequestInterface{
 	{
 		$cURLOptions = array(
 			CURLOPT_URL            => $this->url,
+			CURLOPT_CUSTOMREQUEST  => $this->method,
 			CURLOPT_RETURNTRANSFER => $this->returnTransfer,
 			CURLOPT_HTTPHEADER     => $this->headers,
 			CURLOPT_HEADER         => true,
