@@ -20,8 +20,8 @@ Class Client {
 
 	/**
 	 * Makes a Vinelab\Http\Request object out of an array
-	 * @param  [type] $request [description]
-	 * @return Vinelab\Http\Request          [description]
+	 * @param  array|string $request
+	 * @return Vinelab\Http\Request
 	 */
 	private function requestInstance($request)
 	{
