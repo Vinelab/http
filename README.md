@@ -1,12 +1,12 @@
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/0663136a-6dde-4159-bc96-d1749599dca4/big.png)](https://insight.sensiolabs.com/projects/0663136a-6dde-4159-bc96-d1749599dca4)
-
 ![build status](https://travis-ci.org/Vinelab/http.png?branch=master "build status")
 
 [![Dependency Status](https://www.versioneye.com/user/projects/53efc9a613bb06cc6f0004b0/badge.svg?style=flat)](https://www.versioneye.com/user/projects/53efc9a613bb06cc6f0004b0)
 
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/0663136a-6dde-4159-bc96-d1749599dca4/big.png)](https://insight.sensiolabs.com/projects/0663136a-6dde-4159-bc96-d1749599dca4)
+
 # http://Client
 
-A smart and simple HTTP client for JSON and XML.
+A smart and simple HTTP client for sending and recieving JSON and XML.
 
 ## Installation
 
@@ -100,6 +100,38 @@ It will automatically alias itself as **HttpClient** so no need to alias it in y
 
 	// XML
 	$response->xml();
+```
+
+### Headers
+
+```php
+$response = HttpClient::get([
+	'url' => 'http://some.where.url',
+	'headers' => ['Connection: close', 'Authorization: some-secret-here']
+]);
+
+// The full headers payload
+$response->headers();
+```
+
+### Enforce HTTP Version
+
+```php
+HttpClient::get(['version' => 1.1, 'url' => 'http://some.url']);
+```
+
+### Raw Content
+
+```php
+HttpClient::post(['url' => 'http://to.send.to', 'content' => 'Whatever content here may go!']);
+```
+
+#### Custom Query String
+
+The content passed in the `content` key will be concatenated to the *URL* followed by a *?*
+
+```php
+HttpClient::get(['url' => 'http://my.url', 'content' => 'a=b&c=d']);
 ```
 
 > It is pretty much the same process with different HTTP Verbs. Supports ``` GET, POST, PUT, DELETE, PATCH, OPTIONS, HEAD ```
