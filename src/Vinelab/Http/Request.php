@@ -103,8 +103,10 @@ Class Request implements RequestInterface{
 			CURLOPT_MAXREDIRS      => 50
 		);
 
-		if ($this->method === static::method('POST'))
-		{
+		if ($this->method === static::method('POST')
+			|| $this->method === static::method('PUT')
+			|| $this->method === static::method('PATCH')
+		) {
 			if (count($this->params) > 0)
 			{
 				$cURLOptions[CURLOPT_POST] = count($this->params);
