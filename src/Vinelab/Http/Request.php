@@ -13,6 +13,7 @@ Class Request implements RequestInterface{
 		'version' 		 => null,
 		'method'		 => self::METHOD_GET,
 		'url'            => null,
+		'content'		 => null,
 		'params'         => [],
 		'headers'        => [],
 		'options'        => [],
@@ -43,6 +44,13 @@ Class Request implements RequestInterface{
 	public $url = null;
 
 	/**
+	 * Raw content.
+	 *
+	 * @var string
+	 */
+	public $content = null;
+
+	/**
 	 * Request Headers
 	 * @var Associative Array
 	 */
@@ -69,6 +77,7 @@ Class Request implements RequestInterface{
 
 		$this->httpVersion = $data['version'];
 		$this->url         = $data['url'];
+		$this->content 	   = $data['content'];
 		$this->method      = $data['method'];
 		$this->params      = $data['params'];
 		$this->headers     = $data['headers'];
@@ -95,12 +104,22 @@ Class Request implements RequestInterface{
 
 		if ($this->method === static::method('POST'))
 		{
-			$cURLOptions[CURLOPT_POST] = count($this->params);
-			$cURLOptions[CURLOPT_POSTFIELDS] = ($this->json) ? json_encode($this->params) : $this->params;
+			if (count($this->params) > 0)
+			{
+				$cURLOptions[CURLOPT_POST] = count($this->params);
+				$cURLOptions[CURLOPT_POSTFIELDS] = ($this->json) ? json_encode($this->params) : $this->params;
+			}
+			elseif ( ! is_null($this->content))
+			{
+				$cURLOptions[CURLOPT_POST] = strlen($this->content);
+				$cURLOptions[CURLOPT_POSTFIELDS] = ($this->json) ? json_encode($this->content) : $this->content;
+			}
 
 		} elseif (count($this->params) > 0) {
 			$this->url = $this->url.'?'.http_build_query($this->params);
 			$cURLOptions[CURLOPT_URL] = $this->url;
+		} elseif ( ! is_null($this->content)) {
+			$cURLOptions[CURLOPT_URL] = $this->url .'?'. $this->content;
 		}
 
 		// initialize cURL
