@@ -10,12 +10,14 @@ Class Request implements RequestInterface{
 	 */
 	protected $default = [
 
-		'url'        => null,
-		'params' => [],
-		'headers'    => [],
-		'options'    => [],
+		'version' 		 => null,
+		'method'		 => self::METHOD_GET,
+		'url'            => null,
+		'params'         => [],
+		'headers'        => [],
+		'options'        => [],
 		'returnTransfer' => true,
-		'json'		 => false
+		'json'           => false
 	];
 
 	/**
@@ -24,6 +26,12 @@ Class Request implements RequestInterface{
 	 */
 	public $method = self::METHOD_GET;
 
+	/**
+	 * Specify the HTTP protocol version (1.0/1.1)
+	 *
+	 * @var float
+	 */
+	public $version = null;
 	/**
 	 * @var Array
 	 */
@@ -55,15 +63,16 @@ Class Request implements RequestInterface{
 	/**
 	 * @param Array $requestData
 	 */
-	function __construct($requestData)
+	function __construct($requestData = array())
 	{
 		$data = array_merge($this->default, $requestData);
 
-		$this->url     = $data['url'];
-		$this->method  = $data['method'];
-		$this->params  = $data['params'];
-		$this->headers = $data['headers'];
-		$this->json    = $data['json'];
+		$this->httpVersion = $data['version'];
+		$this->url         = $data['url'];
+		$this->method      = $data['method'];
+		$this->params      = $data['params'];
+		$this->headers     = $data['headers'];
+		$this->json        = $data['json'];
 
 		if ($this->json)
 		{
@@ -74,6 +83,7 @@ Class Request implements RequestInterface{
 	public function send()
 	{
 		$cURLOptions = array(
+			CURLOPT_HTTP_VERSION   => $this->getCurlHttpVersion(),
 			CURLOPT_URL            => $this->url,
 			CURLOPT_RETURNTRANSFER => $this->returnTransfer,
 			CURLOPT_HTTPHEADER     => $this->headers,
@@ -111,4 +121,34 @@ Class Request implements RequestInterface{
 		$const = 'METHOD_'.strtoupper($method);
 		return constant('self::'.$const);
 	}
+
+	/**
+	 * Get the cURL Equivalent for HTTP version.
+	 *
+	 * @return int
+	 */
+	public function getCurlHttpVersion()
+	{
+		$version = $this->httpVersion;
+
+		if (is_numeric($version)) $version = floatval($version);
+
+		switch($version)
+		{
+			case 1.0:
+				$cURLVersion = CURL_HTTP_VERSION_1_0;
+			break;
+
+			case 1.1:
+				$cURLVersion = CURL_HTTP_VERSION_1_1;
+			break;
+
+			default:
+				$cURLVersion = CURL_HTTP_VERSION_NONE;
+			break;
+		}
+
+		return $cURLVersion;
+	}
+
 }
