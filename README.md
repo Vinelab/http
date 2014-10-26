@@ -1,3 +1,5 @@
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/0663136a-6dde-4159-bc96-d1749599dca4/big.png)](https://insight.sensiolabs.com/projects/0663136a-6dde-4159-bc96-d1749599dca4)
+
 ![build status](https://travis-ci.org/Vinelab/http.png?branch=master "build status")
 
 [![Dependency Status](https://www.versioneye.com/user/projects/53efc9a613bb06cc6f0004b0/badge.svg?style=flat)](https://www.versioneye.com/user/projects/53efc9a613bb06cc6f0004b0)
