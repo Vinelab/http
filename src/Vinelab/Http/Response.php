@@ -27,6 +27,9 @@ Class Response implements ResponseInterface {
 	 */
 	function __construct($cURL)
 	{
+		// added by kay899 as some RSS Feed errors: "Problem (2) in the Chunked-Encoded data "
+		curl_setopt($cURL, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0);
+		
 		$response = curl_exec($cURL);
 
 		if (!curl_errno($cURL))
