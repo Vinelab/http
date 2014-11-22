@@ -27,6 +27,7 @@ Class Response implements ResponseInterface {
 	 */
 	function __construct($cURL)
 	{
+		curl_setopt($cURL, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0);
 		$response = curl_exec($cURL);
 
 		if (!curl_errno($cURL))
