@@ -18,7 +18,9 @@ Class Request implements RequestInterface{
 		'headers'        => [],
 		'options'        => [],
 		'returnTransfer' => true,
-		'json'           => false
+		'json'           => false,
+		'maxRedirects'   => 5,
+		'timeout'        => 30,
 	];
 
 	/**
@@ -69,19 +71,33 @@ Class Request implements RequestInterface{
 	public $returnTransfer = true;
 
 	/**
+	* Return cURL max redirect times
+	* @var integer
+	*/
+	public $maxRedirects = 5;
+
+	/**
+	* Return cURL timeout seconds
+	* @var integer
+	*/
+	public $timeout = 30;
+
+	/**
 	 * @param Array $requestData
 	 */
 	function __construct($requestData = array())
 	{
 		$data = array_merge($this->default, $requestData);
 
-		$this->httpVersion = $data['version'];
-		$this->url         = $data['url'];
-		$this->content 	   = $data['content'];
-		$this->method      = $data['method'];
-		$this->params      = $data['params'];
-		$this->headers     = $data['headers'];
-		$this->json        = $data['json'];
+		$this->httpVersion  = $data['version'];
+		$this->url          = $data['url'];
+		$this->content 	    = $data['content'];
+		$this->method       = $data['method'];
+		$this->params       = $data['params'];
+		$this->headers      = $data['headers'];
+		$this->json         = $data['json'];
+		$this->maxRedirects = $data['maxRedirects'];
+		$this->timeout      = $data['timeout'];
 
 		if ($this->json)
 		{
@@ -100,7 +116,8 @@ Class Request implements RequestInterface{
 			CURLOPT_HEADER         => true,
 			CURLINFO_HEADER_OUT    => true,
 			CURLOPT_FOLLOWLOCATION => true,
-			CURLOPT_MAXREDIRS      => 50
+			CURLOPT_MAXREDIRS      => $this->maxRedirects,
+			CURLOPT_TIMEOUT        => $this->timeout,
 		);
 
 		if ($this->method === static::method('POST')
