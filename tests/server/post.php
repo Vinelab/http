@@ -1,3 +1,5 @@
-<?php namespace Vinelab\Http\Tests\Server;
+<?php
+
+namespace Vinelab\Http\Tests\Server;
 
 print_r($_POST);

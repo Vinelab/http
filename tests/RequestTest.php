@@ -2,16 +2,16 @@
 
 use Vinelab\Http\Request;
 
-class RequestTest extends PHPUnit_Framework_TestCase {
-
+class RequestTest extends PHPUnit_Framework_TestCase
+{
     public function testInitializingEmptyRequest()
     {
-        $this->assertInstanceOf('Vinelab\Http\Request', new Request);
+        $this->assertInstanceOf('Vinelab\Http\Request', new Request());
     }
 
     public function testGettingCurlHttpVersion()
     {
-        $request = new Request;
+        $request = new Request();
         $this->assertEquals(CURL_HTTP_VERSION_NONE, $request->getCurlHttpVersion());
 
         $request10 = new Request(['version' => 1.0]);

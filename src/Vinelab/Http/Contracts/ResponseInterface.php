@@ -1,12 +1,18 @@
-<?php namespace Vinelab\Http\Contracts;
+<?php
+
+namespace Vinelab\Http\Contracts;
 
 /**
  * Http Response returned from {@see HttpClientInterface::request}.
+ *
+ * @author Abed Halawi <abed.halawi@vinelab.com>
+ *
+ * @since 1.0.0
  */
 interface ResponseInterface
 {
     /**
-     * @return integer
+     * @return int
      */
     public function statusCode();
 
@@ -27,6 +33,7 @@ interface ResponseInterface
 
     /**
      * @param $name
+     *
      * @return mixed
      */
     public function header($name);

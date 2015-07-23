@@ -1,144 +1,196 @@
-<?php namespace Vinelab\Http;
+<?php
+
+namespace Vinelab\Http;
 
 use Vinelab\Http\Contracts\ResponseInterface;
 
-Class Response implements ResponseInterface {
+/**
+ * The HTTP Response.
+ *
+ * @author Abed Halawi <abed.halawi@vinelab.com>
+ *
+ * @since 1.0.0
+ */
+class Response implements ResponseInterface
+{
+    /**
+     * The result coming from curl_getinfo().
+     *
+     * @var array
+     */
+    protected $info = [];
 
-	/**
-	 * The result coming from curl_getinfo()
-	 * @var Array
-	 */
-	protected $info = [];
+    /**
+     * Response Content (Body).
+     *
+     * @var mixed
+     */
+    protected $content;
 
-	/**
-	 * Response Content (Body)
-	 * @var Mixed
-	 */
-	protected $content;
+    /**
+     * Response Headers.
+     *
+     * @var string
+     */
+    protected $headers = [];
 
-	/**
-	 * Response Headers
-	 * @var String
-	 */
-	protected $headers = [];
+    /**
+     * @param cURL Handle $cURL
+     */
+    public function __construct($cURL)
+    {
+        curl_setopt($cURL, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0);
+        $response = curl_exec($cURL);
 
-	/**
-	 * @param cURL Handle $cURL
-	 */
-	function __construct($cURL)
-	{
-		curl_setopt($cURL, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0);
-		$response = curl_exec($cURL);
+        if (!curl_errno($cURL)) {
+            $this->info = curl_getinfo($cURL);
+            $this->headers = $this->parseHeaders($response, $this->info['header_size']);
+            $this->content = $this->parseBody($response, $this->info['header_size']);
+        } else {
+            throw new \Exception(curl_error($cURL));
+        }
 
-		if (!curl_errno($cURL))
-		{
-			$this->info    = curl_getinfo($cURL);
-			$this->headers = $this->parseHeaders($response, $this->info['header_size']);
-			$this->content = $this->parseBody($response, $this->info['header_size']);
+        curl_close($cURL);
+    }
 
-		} else {
+    /**
+     * Initiates a request.
+     *
+     * @param cURL Handle $cURL
+     *
+     * @return Vinelab\Http\Response
+     */
+    public static function make($cURL)
+    {
+        return new static($cURL);
+    }
 
-			throw new \Exception(curl_error($cURL));
-		}
+    /**
+     * Get the information about this response,
+     * including header, status code and content.
+     *
+     * @return array
+     */
+    public function info()
+    {
+        return $this->info;
+    }
 
-		curl_close($cURL);
-	}
+    /**
+     * Get the status code for this response instance.
+     *
+     * @return int
+     */
+    public function statusCode()
+    {
+        return $this->info['http_code'];
+    }
 
-	/**
-	 * Initiates a request
-	 * @param  cURL Handle $cURL
-	 * @return Response
-	 */
-	public static function make($cURL)
-	{
-		return new static($cURL);
-	}
+    /**
+     * Get the content type of this response instance.
+     *
+     * @return string
+     */
+    public function contentType()
+    {
+        return $this->info['content_type'];
+    }
 
-	/**
-	 * @return @var info
-	 */
-	public function info()
-	{
-		return $this->info;
-	}
+    /**
+     * Get the content of this response instance.
+     *
+     * @return mixed
+     */
+    public function content()
+    {
+        return $this->content;
+    }
 
-	public function statusCode()
-	{
-		return $this->info['http_code'];
-	}
+    /**
+     * Parse the headers of this response instance.
+     *
+     * @param  string $response
+     * @param  string $headerSize
+     *
+     * @return array
+     */
+    protected function parseHeaders($response, $headerSize)
+    {
+        $headers = substr($response, 0, $headerSize);
+        $parsedHeaders = [];
 
-	public function contentType()
-	{
-		return $this->info['content_type'];
-	}
+        foreach (explode("\r\n", $headers) as $header) {
+            if (strpos($header, ':')) {
+                $nestedHeader = explode(':', $header);
+                $parsedHeaders[$nestedHeader[0]] = trim($nestedHeader[1]);
+            }
+        }
 
-	public function content()
-	{
-		return $this->content;
-	}
+        return $parsedHeaders;
+    }
 
-	protected function parseHeaders($response, $headerSize)
-	{
-		$headers = substr($response, 0, $headerSize);
-		$parsedHeaders = [];
+    /**
+     * Get the headers of this response instance.
+     *
+     * @return array
+     */
+    public function headers()
+    {
+        return $this->headers;
+    }
 
-		foreach (explode("\r\n",$headers) as $header)
-		{
-			if (strpos($header, ':'))
-			{
-				$nestedHeader = explode(':', $header);
-				$parsedHeaders[$nestedHeader[0]] = trim($nestedHeader[1]);
-			}
-		}
+    /**
+     * Get a specific header from the headers of this response instance.
+     *
+     * @param  string $name
+     *
+     * @return string
+     */
+    public function header($name)
+    {
+        return (array_key_exists($name, $this->headers)) ? $this->headers[$name] : null;
+    }
 
-		return $parsedHeaders;
-	}
+    /**
+     * Parses the body (content) out of the response.
+     *
+     * @param cURL Response    $response
+     * @param cURL Header Size $headerSize
+     *
+     * @return string
+     */
+    public function parseBody($response, $headerSize)
+    {
+        return substr($response, $headerSize);
+    }
 
-	public function headers()
-	{
-		return $this->headers;
-	}
+    /**
+     * Content encoded as JSON.
+     *
+     * @return string
+     */
+    public function json()
+    {
+        return json_decode($this->content);
+    }
 
-	public function header($name)
-	{
-		return (array_key_exists($name, $this->headers)) ? $this->headers[$name] : null;
-	}
+    /**
+     * Content encoded as XML.
+     *
+     * @return SimpleXMLElement
+     */
+    public function xml()
+    {
+        return new \SimpleXMLElement($this->content);
+    }
 
-	/**
-	 * Parses the body (content) out of the response
-	 * @param  cURL Response $response
-	 * @param  cURL Header Size $headerSize
-	 * @return string
-	 */
-	public function parseBody($response, $headerSize)
-	{
-		return substr($response, $headerSize);
-	}
-
-	/**
-	 * Content encoded as JSON
-	 * @return string
-	 */
-	public function json()
-	{
-		return json_decode($this->content);
-	}
-
-	/**
-	 * Content encoded as XML
-	 * @return SimpleXMLElement
-	 */
-	public function xml()
-	{
-		return new \SimpleXMLElement($this->content);
-	}
-
-	/**
-	 * Primary IP
-	 * @return string
-	 */
-	public function ip()
-	{
-		return $this->info['primary_ip'];
-	}
+    /**
+     * Primary IP.
+     *
+     * @return string
+     */
+    public function ip()
+    {
+        return $this->info['primary_ip'];
+    }
 }
