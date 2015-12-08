@@ -29,7 +29,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
         $headers = $this->client->get($request)->headers();
 
         $this->assertArrayHasKey('Host', $headers, 'Headers must have Host');
-        $this->assertEquals(static::$serverHost, $headers['Host']);
+        $this->assertEquals(static::$serverHost.':'.static::$serverPort, $headers['Host']);
 
         // custom headers
         $request['url'] = 'http://'.static::serverUrl().'/content_type.php';
