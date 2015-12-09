@@ -122,7 +122,7 @@ class Response implements ResponseInterface
         foreach (explode("\r\n", $headers) as $header) {
             if (strpos($header, ':')) {
                 $nestedHeader = explode(':', $header);
-                $parsedHeaders[$nestedHeader[0]] = trim($nestedHeader[1]);
+                $parsedHeaders[array_shift($nestedHeader)] = trim(implode(':', $nestedHeader));
             }
         }
 
