@@ -29,6 +29,8 @@ class Request implements RequestInterface
         'options' => [],
         'returnTransfer' => true,
         'json' => false,
+        'maxRedirects' => 5,
+        'timeout' => 30,
     ];
 
     /**
@@ -84,6 +86,17 @@ class Request implements RequestInterface
     public $returnTransfer = true;
 
     /**
+    * Return cURL max redirect times
+    * @var integer
+    */
+    public $maxRedirects = 5;
+    /**
+    * Return cURL timeout seconds
+    * @var integer
+    */
+    public $timeout = 30;
+
+    /**
      * @param array $requestData
      */
     public function __construct($requestData = array())
@@ -97,6 +110,8 @@ class Request implements RequestInterface
         $this->params = $data['params'];
         $this->headers = $data['headers'];
         $this->json = $data['json'];
+        $this->maxRedirects = $data['maxRedirects'];
+        $this->timeout = $data['timeout'];
 
         if ($this->json) {
             array_push($this->headers, 'Content-Type: application/json');
@@ -119,7 +134,8 @@ class Request implements RequestInterface
             CURLOPT_HEADER => true,
             CURLINFO_HEADER_OUT => true,
             CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_MAXREDIRS => 50,
+            CURLOPT_MAXREDIRS => $this->maxRedirects,
+            CURLOPT_TIMEOUT => $this->timeout,
         );
 
         if ($this->method === static::method('POST')
