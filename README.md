@@ -6,15 +6,14 @@
 
 # http://Client
 
-A smart and simple HTTP client for sending and recieving JSON and XML.
-
+A smart, simple and fault-tolerant HTTP client for sending and recieving JSON and XML.
 
 
 ## Installation
 
 ### Composer
 
-- `"vinelab/http": "dev-master"` or refer to [vinelab/http on packagist.org](https://packagist.org/packages/vinelab/http) for the latest version installation instructions.
+`composer require vinelab/http`
 
 ```php
 // change this to point correctly according
@@ -43,104 +42,81 @@ It will automatically alias itself as **HttpClient** so no need to alias it in y
 #### Simple
 
 ```php
+$response = HttpClient::get('http://example.org');
 
-	$response = HttpClient::get('http://example.org');
-
-	// raw content
-	$response->content();
-
+// raw content
+$response->content();
 ```
 
 #### With Params
 
 ```php
+$request = [
+	'url' => 'http://somehost.net/something',
+	'params' => [
 
-	$request = [
-		'url' => 'http://somehost.net/something',
-		'params' => [
+		'id'     => '12350ME1D',
+		'lang'   => 'en-us',
+		'format' => 'rss_200'
+	]
+];
 
-			'id'     => '12350ME1D',
-			'lang'   => 'en-us',
-			'format' => 'rss_200'
-		]
-	];
+$response = HttpClient::get($request);
 
-	$response = HttpClient::get($request);
+// raw content
+$response->content();
 
-	// raw content
-	$response->content();
+// in case of json
+$response->json();
 
-	// in case of json
-	$response->json();
-
-	// XML
-	$response->xml();
-
+// XML
+$response->xml();
 ```
 
 ### POST
 
 ```php
+$request = [
+	'url' => 'http://somehost.net/somewhere',
+	'params' => [
 
-	$request = [
-		'url' => 'http://somehost.net/somewhere',
-		'params' => [
+		'id'     => '12350ME1D',
+		'lang'   => 'en-us',
+		'format' => 'rss_200'
+	]
+];
 
-			'id'     => '12350ME1D',
-			'lang'   => 'en-us',
-			'format' => 'rss_200'
-		]
-	];
+$response = HttpClient::post($request);
 
-	$response = HttpClient::post($request);
+// raw content
+$response->content();
 
-	// raw content
-	$response->content();
+// in case of json
+$response->json();
 
-	// in case of json
-	$response->json();
-
-	// XML
-	$response->xml();
+// XML
+$response->xml();
 ```
 
-### Timeout option
+### Options
+These options work with all requests.
+
+#### Timeout
+
+You can set the `timeout` option in order to specify the number of seconds that your request will fail, if not completed.
 
 ```php
+$request = [
+	'url' => 'http://somehost.net/somewhere',
+	'params' => [
 
-	$request = [
-		'url' => 'http://somehost.net/somewhere',
-		'params' => [
-
-			'id'     => '12350ME1D',
-			'lang'   => 'en-us',
-			'format' => 'rss_200'
-		],
-		'timeout' => 10
-	];
-
-	You can set the timeout variable in order to specify the number of seconds that your request will fail, if not completed.
+		'id'     => '12350ME1D',
+		'lang'   => 'en-us',
+		'format' => 'rss_200'
+	],
+	'timeout' => 10
+];
 ```
-
-### Fault Tolerance
-
-```php
-
-	$request = [
-		'url' => 'http://somehost.net/somewhere',
-		'params' => [
-
-			'id'     => '12350ME1D',
-			'lang'   => 'en-us',
-			'format' => 'rss_200'
-		],
-		'timeout' => 10
-		'tolerant' => true,
-		'timeUntilNextTry' => 1,
-		'triesUntilFailure' => 3
-	];
-```
-**Notice**: In order to make use of fault tolerance option, you must specify the `timeout` parameter too.
 
 ### Headers
 
@@ -176,7 +152,30 @@ HttpClient::get(['url' => 'http://my.url', 'content' => 'a=b&c=d']);
 
 > It is pretty much the same process with different HTTP Verbs. Supports ``` GET, POST, PUT, DELETE, PATCH, OPTIONS, HEAD ```
 
-#### TODO
-- Improve tests to include testing all the methods of response (like statusCode...)
-- Include tests for handling bad data / errors
-- Improve tests to include testing for all HTTP Verbs
+## Fault Tolerance
+
+Fault tolerance allows the request to be re-issued when it fails (i.e. timeout).
+This is useful in cases such as Microservices: When a service is down and is being called by another service,
+with fault tolerance the request will be re-issued in the hopes of the destination service being up again.
+
+Issue a fault-tolerant request by setting the `tolerant` flag to `true` in the request. Also, specify
+the time it should wait until it tries again with `timeUntilNextTry` (in seconds) and the number of tries
+before it is considered a failure with `triesUntilFailure` (in seconds).
+
+```php
+$request = [
+	'url' => 'http://somehost.net/somewhere',
+	'params' => [
+
+		'id'     => '12350ME1D',
+		'lang'   => 'en-us',
+		'format' => 'rss_200'
+	],
+	'timeout' => 10
+	'tolerant' => true,
+	'timeUntilNextTry' => 1,
+	'triesUntilFailure' => 3
+];
+```
+
+> **IMPORTANT! Notice**: In order to make use of fault tolerance option, you must specify the `timeout` parameter too.
