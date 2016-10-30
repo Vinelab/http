@@ -29,7 +29,7 @@ class Request implements RequestInterface
         'options' => [],
         'returnTransfer' => true,
         'json' => false,
-        'maxRedirects' => 5,
+        'maxRedirects' => 50,
         'timeout' => 30,
         'tolerant' => false,
     ];
@@ -91,7 +91,7 @@ class Request implements RequestInterface
      *
      * @var int
      */
-    public $maxRedirects = 5;
+    public $maxRedirects = 50;
     /**
      * Return cURL timeout seconds.
      *
