@@ -122,6 +122,26 @@ It will automatically alias itself as **HttpClient** so no need to alias it in y
 	You can set the timeout variable in order to specify the number of seconds that your request will fail, if not completed.
 ```
 
+### Fault Tolerance
+
+```php
+
+	$request = [
+		'url' => 'http://somehost.net/somewhere',
+		'params' => [
+
+			'id'     => '12350ME1D',
+			'lang'   => 'en-us',
+			'format' => 'rss_200'
+		],
+		'timeout' => 10
+		'tolerant' => true
+	];
+
+	There are two parameters that you must specify. `TIME_UNTIL_NEXT_TRY` and `NUMBER_OF_TRIES_UNTIL_FAILURE`. Default values are `TIME_UNTIL_NEXT_TRY=1` and `NUMBER_OF_TRIES_UNTIL_FAILURE=5`.
+```
+**Notice**: In order to make use of fault tolerance option, you must specify the `timeout` parameter too.
+
 ### Headers
 
 ```php
@@ -155,10 +175,6 @@ HttpClient::get(['url' => 'http://my.url', 'content' => 'a=b&c=d']);
 ```
 
 > It is pretty much the same process with different HTTP Verbs. Supports ``` GET, POST, PUT, DELETE, PATCH, OPTIONS, HEAD ```
-
-#### Fault Tolerance
-
-There are two parameters that you can specify the `TIME_UNTIL_NEXT_TRY` and `NUMBER_OF_TRIES_UNTIL_FAILURE`. Default values are `TIME_UNTIL_NEXT_TRY=1` and `NUMBER_OF_TRIES_UNTIL_FAILURE=5`.
 
 #### TODO
 - Improve tests to include testing all the methods of response (like statusCode...)
