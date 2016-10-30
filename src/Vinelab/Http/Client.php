@@ -39,7 +39,7 @@ class Client
      *
      * @return array
      */
-    protected function faultTolerance($request)
+    protected function sendWithTolerance($request)
     {
         $operation = new Callback(function () use ($request) {
                 return $request->send();
@@ -89,7 +89,7 @@ class Client
             $this->request = $this->requestInstance($request);
 
             if ($this->request->tolerant) {
-                return $this->faultTolerance($this->request);
+                return $this->sendWithTolerance($this->request);
             } else {
                 return $this->request->send();
             }
