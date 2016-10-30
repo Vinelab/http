@@ -104,6 +104,24 @@ It will automatically alias itself as **HttpClient** so no need to alias it in y
 	$response->xml();
 ```
 
+### Timeout option
+
+```php
+
+	$request = [
+		'url' => 'http://somehost.net/somewhere',
+		'params' => [
+
+			'id'     => '12350ME1D',
+			'lang'   => 'en-us',
+			'format' => 'rss_200'
+		],
+		'timeout' => 10
+	];
+
+	You can set the timeout variable in order to specify the number of seconds that your request will fail, if not completed.
+```
+
 ### Headers
 
 ```php
