@@ -138,6 +138,10 @@ HttpClient::get(['url' => 'http://my.url', 'content' => 'a=b&c=d']);
 
 > It is pretty much the same process with different HTTP Verbs. Supports ``` GET, POST, PUT, DELETE, PATCH, OPTIONS, HEAD ```
 
+#### Fault Tolerance
+
+There are two parameters that you can specify the `TIME_UNTIL_NEXT_TRY` and `NUMBER_OF_TRIES_UNTIL_FAILURE`. Default values are `TIME_UNTIL_NEXT_TRY=1` and `NUMBER_OF_TRIES_UNTIL_FAILURE=5`.
+
 #### TODO
 - Improve tests to include testing all the methods of response (like statusCode...)
 - Include tests for handling bad data / errors
