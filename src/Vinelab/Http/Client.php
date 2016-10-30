@@ -65,9 +65,9 @@ class Client
             $waitStrategy = new CountLimited(
                 new ExponentialBackOff(
                     new SleepWaiter(),
-                    env('TIME_UNTIL_NEXT_TRY', 1)
+                    (getenv('TIME_UNTIL_NEXT_TRY') ?: 1)
                 ),
-                env('NUMBER_OF_TRIES_UNTIL_FAILURE', 5)
+                (getenv('NUMBER_OF_TRIES_UNTIL_FAILURE') ?: 5)
             );
 
             // Creates the runner
