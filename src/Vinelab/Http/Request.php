@@ -31,6 +31,7 @@ class Request implements RequestInterface
         'json' => false,
         'maxRedirects' => 5,
         'timeout' => 30,
+        'tolerant' => false,
     ];
 
     /**
@@ -86,15 +87,24 @@ class Request implements RequestInterface
     public $returnTransfer = true;
 
     /**
-    * Return cURL max redirect times
-    * @var integer
-    */
+     * Return cURL max redirect times.
+     *
+     * @var int
+     */
     public $maxRedirects = 5;
     /**
-    * Return cURL timeout seconds
-    * @var integer
-    */
+     * Return cURL timeout seconds.
+     *
+     * @var int
+     */
     public $timeout = 30;
+
+    /**
+     * Sets fault tolerance.
+     *
+     * @var bool
+     */
+    public $tolerant = false;
 
     /**
      * @param array $requestData
@@ -112,6 +122,7 @@ class Request implements RequestInterface
         $this->json = $data['json'];
         $this->maxRedirects = $data['maxRedirects'];
         $this->timeout = $data['timeout'];
+        $this->tolerant = $data['tolerant'];
 
         if ($this->json) {
             array_push($this->headers, 'Content-Type: application/json');

@@ -33,6 +33,37 @@ class Client
     }
 
     /**
+     * Add fault tolerance to the request.
+     *
+     * @param string|array $request
+     *
+     * @return array
+     */
+    protected function faultTolerance($request)
+    {
+        $operation = new Callback(function () use ($request) {
+                return $request->send();
+            });
+
+        // Creates the strategy used to wait between failing calls
+        $waitStrategy = new CountLimited(
+            new ExponentialBackOff(
+                new SleepWaiter(),
+                (getenv('TIME_UNTIL_NEXT_TRY') ?: 1)
+            ),
+            (getenv('NUMBER_OF_TRIES_UNTIL_FAILURE') ?: 5)
+        );
+
+        // Creates the runner
+        $runner = new RetryOperationRunner(
+            new CallbackOperationRunner(),
+            $waitStrategy
+        );
+
+        return $runner->run($operation);
+    }
+
+    /**
      * Makes a Vinelab\Http\Request object out of an array.
      *
      * @param array|string $request
@@ -57,26 +88,11 @@ class Client
             $request['method'] = Request::method($method);
             $this->request = $this->requestInstance($request);
 
-            $operation = new Callback(function () use ($request) {
+            if ($this->request->tolerant) {
+                return $this->faultTolerance($this->request);
+            } else {
                 return $this->request->send();
-            });
-
-            // Creates the strategy used to wait between failing calls
-            $waitStrategy = new CountLimited(
-                new ExponentialBackOff(
-                    new SleepWaiter(),
-                    (getenv('TIME_UNTIL_NEXT_TRY') ?: 1)
-                ),
-                (getenv('NUMBER_OF_TRIES_UNTIL_FAILURE') ?: 5)
-            );
-
-            // Creates the runner
-            $runner = new RetryOperationRunner(
-                new CallbackOperationRunner(),
-                $waitStrategy
-            );
-
-            return $runner->run($operation);
+            }
         }
 
         throw new \Exception('Invalid Request Params sent to HttpClient');
