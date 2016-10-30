@@ -32,6 +32,8 @@ class Request implements RequestInterface
         'maxRedirects' => 50,
         'timeout' => 30,
         'tolerant' => false,
+        'timeUntilNextTry' => 1,
+        'triesUntilFailure' => 5,
     ];
 
     /**
@@ -107,6 +109,20 @@ class Request implements RequestInterface
     public $tolerant = false;
 
     /**
+     * Sets fault tolerance time between tries.
+     *
+     * @var int
+     */
+    public $timeUntilNextTry = 1;
+
+    /**
+     * Sets fault tolerance number of tries until failure.
+     *
+     * @var int
+     */
+    public $triesUntilFailure = 5;
+
+    /**
      * @param array $requestData
      */
     public function __construct($requestData = array())
@@ -123,6 +139,8 @@ class Request implements RequestInterface
         $this->maxRedirects = $data['maxRedirects'];
         $this->timeout = $data['timeout'];
         $this->tolerant = $data['tolerant'];
+        $this->timeUntilNextTry = $data['timeUntilNextTry'];
+        $this->triesUntilFailure = $data['triesUntilFailure'];
 
         if ($this->json) {
             array_push($this->headers, 'Content-Type: application/json');

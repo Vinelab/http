@@ -135,10 +135,10 @@ It will automatically alias itself as **HttpClient** so no need to alias it in y
 			'format' => 'rss_200'
 		],
 		'timeout' => 10
-		'tolerant' => true
+		'tolerant' => true,
+		'timeUntilNextTry' => 1,
+		'triesUntilFailure' => 3
 	];
-
-	There are two parameters that you must specify. `TIME_UNTIL_NEXT_TRY` and `NUMBER_OF_TRIES_UNTIL_FAILURE`. Default values are `TIME_UNTIL_NEXT_TRY=1` and `NUMBER_OF_TRIES_UNTIL_FAILURE=5`.
 ```
 **Notice**: In order to make use of fault tolerance option, you must specify the `timeout` parameter too.
 

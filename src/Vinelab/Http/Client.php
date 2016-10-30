@@ -42,6 +42,7 @@ class Client
     protected function sendWithTolerance($request)
     {
         $operation = new Callback(function () use ($request) {
+
                 return $request->send();
             });
 
@@ -49,9 +50,9 @@ class Client
         $waitStrategy = new CountLimited(
             new ExponentialBackOff(
                 new SleepWaiter(),
-                (getenv('TIME_UNTIL_NEXT_TRY') ?: 1)
+                $request->timeUntilNextTry
             ),
-            (getenv('NUMBER_OF_TRIES_UNTIL_FAILURE') ?: 5)
+            $request->triesUntilFailure
         );
 
         // Creates the runner
