@@ -2,6 +2,13 @@
 
 namespace Vinelab\Http;
 
+use Tolerance\Waiter\CountLimited;
+use Tolerance\Operation\Callback;
+use Tolerance\Waiter\ExponentialBackOff;
+use Tolerance\Waiter\SleepWaiter;
+use Tolerance\Operation\Runner\RetryOperationRunner;
+use Tolerance\Operation\Runner\CallbackOperationRunner;
+
 /**
  * The HTTP Client.
  *
@@ -50,7 +57,26 @@ class Client
             $request['method'] = Request::method($method);
             $this->request = $this->requestInstance($request);
 
-            return $this->request->send();
+            $operation = new Callback(function () use ($request) {
+                return $this->request->send();
+            });
+
+            // Creates the strategy used to wait between failing calls
+            $waitStrategy = new CountLimited(
+                new ExponentialBackOff(
+                    new SleepWaiter(),
+                    env('TIME_UNTIL_NEXT_TRY', 1)
+                ),
+                env('NUMBER_OF_TRIES_UNTIL_FAILURE', 5)
+            );
+
+            // Creates the runner
+            $runner = new RetryOperationRunner(
+                new CallbackOperationRunner(),
+                $waitStrategy
+            );
+
+            return $runner->run($operation);
         }
 
         throw new \Exception('Invalid Request Params sent to HttpClient');
