@@ -2,6 +2,13 @@
 
 namespace Vinelab\Http;
 
+use Tolerance\Waiter\CountLimited;
+use Tolerance\Operation\Callback;
+use Tolerance\Waiter\ExponentialBackOff;
+use Tolerance\Waiter\SleepWaiter;
+use Tolerance\Operation\Runner\RetryOperationRunner;
+use Tolerance\Operation\Runner\CallbackOperationRunner;
+
 /**
  * The HTTP Client.
  *
@@ -23,6 +30,38 @@ class Client
     protected function valid($request)
     {
         return (boolean) array_key_exists('url', $request);
+    }
+
+    /**
+     * Add fault tolerance to the request.
+     *
+     * @param string|array $request
+     *
+     * @return array
+     */
+    protected function sendWithTolerance($request)
+    {
+        $operation = new Callback(function () use ($request) {
+
+                return $request->send();
+            });
+
+        // Creates the strategy used to wait between failing calls
+        $waitStrategy = new CountLimited(
+            new ExponentialBackOff(
+                new SleepWaiter(),
+                $request->timeUntilNextTry
+            ),
+            $request->triesUntilFailure
+        );
+
+        // Creates the runner
+        $runner = new RetryOperationRunner(
+            new CallbackOperationRunner(),
+            $waitStrategy
+        );
+
+        return $runner->run($operation);
     }
 
     /**
@@ -50,7 +89,11 @@ class Client
             $request['method'] = Request::method($method);
             $this->request = $this->requestInstance($request);
 
-            return $this->request->send();
+            if ($this->request->tolerant) {
+                return $this->sendWithTolerance($this->request);
+            } else {
+                return $this->request->send();
+            }
         }
 
         throw new \Exception('Invalid Request Params sent to HttpClient');

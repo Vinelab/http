@@ -29,6 +29,11 @@ class Request implements RequestInterface
         'options' => [],
         'returnTransfer' => true,
         'json' => false,
+        'maxRedirects' => 50,
+        'timeout' => 30,
+        'tolerant' => false,
+        'timeUntilNextTry' => 1,
+        'triesUntilFailure' => 5,
     ];
 
     /**
@@ -84,6 +89,40 @@ class Request implements RequestInterface
     public $returnTransfer = true;
 
     /**
+     * Return cURL max redirect times.
+     *
+     * @var int
+     */
+    public $maxRedirects = 50;
+    /**
+     * Return cURL timeout seconds.
+     *
+     * @var int
+     */
+    public $timeout = 30;
+
+    /**
+     * Sets fault tolerance.
+     *
+     * @var bool
+     */
+    public $tolerant = false;
+
+    /**
+     * Sets fault tolerance time between tries.
+     *
+     * @var int
+     */
+    public $timeUntilNextTry = 1;
+
+    /**
+     * Sets fault tolerance number of tries until failure.
+     *
+     * @var int
+     */
+    public $triesUntilFailure = 5;
+
+    /**
      * @param array $requestData
      */
     public function __construct($requestData = array())
@@ -97,6 +136,11 @@ class Request implements RequestInterface
         $this->params = $data['params'];
         $this->headers = $data['headers'];
         $this->json = $data['json'];
+        $this->maxRedirects = $data['maxRedirects'];
+        $this->timeout = $data['timeout'];
+        $this->tolerant = $data['tolerant'];
+        $this->timeUntilNextTry = $data['timeUntilNextTry'];
+        $this->triesUntilFailure = $data['triesUntilFailure'];
 
         if ($this->json) {
             array_push($this->headers, 'Content-Type: application/json');
@@ -119,7 +163,8 @@ class Request implements RequestInterface
             CURLOPT_HEADER => true,
             CURLINFO_HEADER_OUT => true,
             CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_MAXREDIRS => 50,
+            CURLOPT_MAXREDIRS => $this->maxRedirects,
+            CURLOPT_TIMEOUT => $this->timeout,
         );
 
         if ($this->method === static::method('POST')
