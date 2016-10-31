@@ -3,34 +3,28 @@
 namespace Vinelab\Http;
 
 use Vinelab\Http\Contracts\ResponseInterface;
+use Vinelab\Http\Exceptions\HttpClientRequestFailedException;
 
-/**
- * The HTTP Response.
- *
- * @author Abed Halawi <abed.halawi@vinelab.com>
- *
- * @since 1.0.0
- */
 class Response implements ResponseInterface
 {
     /**
      * The result coming from curl_getinfo().
      *
-     * @var array
+     * @var Array
      */
     protected $info = [];
 
     /**
      * Response Content (Body).
      *
-     * @var mixed
+     * @var Mixed
      */
     protected $content;
 
     /**
      * Response Headers.
      *
-     * @var string
+     * @var String
      */
     protected $headers = [];
 
@@ -47,7 +41,7 @@ class Response implements ResponseInterface
             $this->headers = $this->parseHeaders($response, $this->info['header_size']);
             $this->content = $this->parseBody($response, $this->info['header_size']);
         } else {
-            throw new \Exception(curl_error($cURL));
+            throw new HttpClientRequestFailedException(curl_error($cURL));
         }
 
         curl_close($cURL);
@@ -58,7 +52,7 @@ class Response implements ResponseInterface
      *
      * @param cURL Handle $cURL
      *
-     * @return Vinelab\Http\Response
+     * @return Response
      */
     public static function make($cURL)
     {
@@ -66,54 +60,28 @@ class Response implements ResponseInterface
     }
 
     /**
-     * Get the information about this response,
-     * including header, status code and content.
-     *
-     * @return array
+     * @return @var info
      */
     public function info()
     {
         return $this->info;
     }
 
-    /**
-     * Get the status code for this response instance.
-     *
-     * @return int
-     */
     public function statusCode()
     {
         return $this->info['http_code'];
     }
 
-    /**
-     * Get the content type of this response instance.
-     *
-     * @return string
-     */
     public function contentType()
     {
         return $this->info['content_type'];
     }
 
-    /**
-     * Get the content of this response instance.
-     *
-     * @return mixed
-     */
     public function content()
     {
         return $this->content;
     }
 
-    /**
-     * Parse the headers of this response instance.
-     *
-     * @param  string $response
-     * @param  string $headerSize
-     *
-     * @return array
-     */
     protected function parseHeaders($response, $headerSize)
     {
         $headers = substr($response, 0, $headerSize);
@@ -122,30 +90,18 @@ class Response implements ResponseInterface
         foreach (explode("\r\n", $headers) as $header) {
             if (strpos($header, ':')) {
                 $nestedHeader = explode(':', $header);
-                $parsedHeaders[array_shift($nestedHeader)] = trim(implode(':', $nestedHeader));
+                $parsedHeaders[$nestedHeader[0]] = trim($nestedHeader[1]);
             }
         }
 
         return $parsedHeaders;
     }
 
-    /**
-     * Get the headers of this response instance.
-     *
-     * @return array
-     */
     public function headers()
     {
         return $this->headers;
     }
 
-    /**
-     * Get a specific header from the headers of this response instance.
-     *
-     * @param  string $name
-     *
-     * @return string
-     */
     public function header($name)
     {
         return (array_key_exists($name, $this->headers)) ? $this->headers[$name] : null;
