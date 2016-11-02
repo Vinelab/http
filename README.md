@@ -178,4 +178,6 @@ $request = [
 ];
 ```
 
+In case of timeout occurance, a `HttpClientRequestFailedException` will be thrown.
+
 > **IMPORTANT! Notice**: In order to make use of fault tolerance option, you must specify the `timeout` parameter too.

@@ -3,6 +3,7 @@
 namespace Vinelab\Http;
 
 use Vinelab\Http\Contracts\ResponseInterface;
+use Vinelab\Http\Exceptions\HttpClientRequestFailedException;
 
 /**
  * The HTTP Response.
@@ -47,7 +48,7 @@ class Response implements ResponseInterface
             $this->headers = $this->parseHeaders($response, $this->info['header_size']);
             $this->content = $this->parseBody($response, $this->info['header_size']);
         } else {
-            throw new \Exception(curl_error($cURL));
+            throw new HttpClientRequestFailedException(curl_error($cURL));
         }
 
         curl_close($cURL);
@@ -109,8 +110,8 @@ class Response implements ResponseInterface
     /**
      * Parse the headers of this response instance.
      *
-     * @param  string $response
-     * @param  string $headerSize
+     * @param string $response
+     * @param string $headerSize
      *
      * @return array
      */
@@ -142,7 +143,7 @@ class Response implements ResponseInterface
     /**
      * Get a specific header from the headers of this response instance.
      *
-     * @param  string $name
+     * @param string $name
      *
      * @return string
      */

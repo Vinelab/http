@@ -2,12 +2,12 @@
 
 namespace Vinelab\Http;
 
-use Tolerance\Waiter\CountLimited;
 use Tolerance\Operation\Callback;
+use Tolerance\Operation\Runner\CallbackOperationRunner;
+use Tolerance\Operation\Runner\RetryOperationRunner;
+use Tolerance\Waiter\CountLimited;
 use Tolerance\Waiter\ExponentialBackOff;
 use Tolerance\Waiter\SleepWaiter;
-use Tolerance\Operation\Runner\RetryOperationRunner;
-use Tolerance\Operation\Runner\CallbackOperationRunner;
 
 /**
  * The HTTP Client.
@@ -15,6 +15,7 @@ use Tolerance\Operation\Runner\CallbackOperationRunner;
  * Dynamically calls a method that sends the corresponding request.
  *
  * @author Abed Halawi <abed.halawi@vinelab.com>
+ * @author Charalampos Raftopoulos <harris@vinelab.com>
  *
  * @since 1.0.0
  */
