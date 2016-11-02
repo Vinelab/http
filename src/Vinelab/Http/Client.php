@@ -8,7 +8,6 @@ use Tolerance\Operation\Runner\RetryOperationRunner;
 use Tolerance\Waiter\CountLimited;
 use Tolerance\Waiter\ExponentialBackOff;
 use Tolerance\Waiter\SleepWaiter;
-use Vinelab\Http\Exceptions\HttpClientRequestFailedException;
 
 /**
  * The HTTP Client.
@@ -63,11 +62,7 @@ class Client
             $waitStrategy
         );
 
-        try {
-            return $runner->run($operation);
-        } catch (HttpClientRequestFailedException $e) {
-            throw $e;
-        }
+        return $runner->run($operation);
     }
 
     /**
