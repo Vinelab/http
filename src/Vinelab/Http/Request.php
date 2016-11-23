@@ -128,7 +128,7 @@ class Request implements RequestInterface
      * @var boolean
      */
     public $digestAuth = [];
-	
+
     /**
      * @param array $requestData
      */
@@ -147,8 +147,10 @@ class Request implements RequestInterface
         $this->timeout = $data['timeout'];
         $this->tolerant = $data['tolerant'];
         $this->timeUntilNextTry = $data['timeUntilNextTry'];
-        $this->triesUntilFailure = $data['triesUntilFailure'];		
-        $this->digestAuth  = $data['digest'];
+        $this->triesUntilFailure = $data['triesUntilFailure'];
+        if (isset($data['digest'])) {
+            $this->digestAuth  = $data['digest'];
+        }
 
         if ($this->json) {
             array_push($this->headers, 'Content-Type: application/json');
@@ -174,7 +176,7 @@ class Request implements RequestInterface
             CURLOPT_MAXREDIRS => $this->maxRedirects,
             CURLOPT_TIMEOUT => $this->timeout,
         );
-		
+
 		//digest auth support
         if(count($this->digestAuth) > 0)  {
             $cURLOptions[CURLOPT_HTTPAUTH] = CURLAUTH_DIGEST;
