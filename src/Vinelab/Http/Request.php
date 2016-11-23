@@ -34,6 +34,7 @@ class Request implements RequestInterface
         'tolerant' => false,
         'timeUntilNextTry' => 1,
         'triesUntilFailure' => 5,
+		'digestAuth'     => []
     ];
 
     /**
@@ -122,6 +123,12 @@ class Request implements RequestInterface
      */
     public $triesUntilFailure = 5;
 
+	/**
+     * Digest Auth
+     * @var boolean
+     */
+    public $digestAuth = [];
+	
     /**
      * @param array $requestData
      */
@@ -140,7 +147,8 @@ class Request implements RequestInterface
         $this->timeout = $data['timeout'];
         $this->tolerant = $data['tolerant'];
         $this->timeUntilNextTry = $data['timeUntilNextTry'];
-        $this->triesUntilFailure = $data['triesUntilFailure'];
+        $this->triesUntilFailure = $data['triesUntilFailure'];		
+        $this->digestAuth  = $data['digest'];
 
         if ($this->json) {
             array_push($this->headers, 'Content-Type: application/json');
@@ -166,6 +174,12 @@ class Request implements RequestInterface
             CURLOPT_MAXREDIRS => $this->maxRedirects,
             CURLOPT_TIMEOUT => $this->timeout,
         );
+		
+		//digest auth support
+        if(count($this->digestAuth) > 0)  {
+            $cURLOptions[CURLOPT_HTTPAUTH] = CURLAUTH_DIGEST;
+            $cURLOptions[CURLOPT_USERPWD] =  $this->digestAuth['username'] . ":" . $this->digestAuth['password'];
+        }
 
         if ($this->method === static::method('POST')
             || $this->method === static::method('PUT')

@@ -130,6 +130,22 @@ $response = HttpClient::get([
 $response->headers();
 ```
 
+### Digest Auth
+
+```php
+$response = HttpClient::get([
+	'url' => 'http://some.where.url',
+	'digest' => [
+		'username' => 'user',
+		'password' => 'pass'
+	],
+	'params' => [
+		'var1'     => 'value1',
+		'var2'   => 'value2'
+	]
+]);
+```
+
 ### Enforce HTTP Version
 
 ```php
