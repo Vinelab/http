@@ -122,12 +122,28 @@ $request = [
 
 ```php
 $response = HttpClient::get([
-	'url' => 'http://some.where.url',
+	'url' => 'http://somehost.net/somewhere',
 	'headers' => ['Connection: close', 'Authorization: some-secret-here']
 ]);
 
 // The full headers payload
 $response->headers();
+```
+
+### Basic Auth
+
+```php
+$response = HttpClient::get([
+	'url' => 'http://somehost.net/somewhere',
+	'auth' => [
+		'username' => 'user',
+		'password' => 'pass'
+	],
+	'params' => [
+		'var1'     => 'value1',
+		'var2'   => 'value2'
+	]
+]);
 ```
 
 ### Digest Auth

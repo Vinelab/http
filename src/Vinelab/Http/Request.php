@@ -27,14 +27,14 @@ class Request implements RequestInterface
         'params' => [],
         'headers' => [],
         'options' => [],
-        'returnTransfer' => true,
         'json' => false,
         'maxRedirects' => 50,
         'timeout' => 30,
         'tolerant' => false,
         'timeUntilNextTry' => 1,
         'triesUntilFailure' => 5,
-		'digestAuth'     => []
+        'digestAuth'     => [],
+        'basicAuth'     => [],
     ];
 
     /**
@@ -83,13 +83,6 @@ class Request implements RequestInterface
     public $json = false;
 
     /**
-     * Return cURL transfer or not.
-     *
-     * @var bool
-     */
-    public $returnTransfer = true;
-
-    /**
      * Return cURL max redirect times.
      *
      * @var int
@@ -123,11 +116,17 @@ class Request implements RequestInterface
      */
     public $triesUntilFailure = 5;
 
-	/**
+    /**
      * Digest Auth
      * @var boolean
      */
     public $digestAuth = [];
+
+    /**
+     * Basic Auth
+     * @var boolean
+     */
+    public $basicAuth = [];
 
     /**
      * @param array $requestData
@@ -149,7 +148,10 @@ class Request implements RequestInterface
         $this->timeUntilNextTry = $data['timeUntilNextTry'];
         $this->triesUntilFailure = $data['triesUntilFailure'];
         if (isset($data['digest'])) {
-            $this->digestAuth  = $data['digest'];
+            $this->digestAuth = $data['digest'];
+        }
+        if (isset($data['auth'])) {
+            $this->basicAuth = $data['auth'];
         }
 
         if ($this->json) {
@@ -168,7 +170,6 @@ class Request implements RequestInterface
             CURLOPT_HTTP_VERSION => $this->getCurlHttpVersion(),
             CURLOPT_URL => $this->url,
             CURLOPT_CUSTOMREQUEST => $this->method,
-            CURLOPT_RETURNTRANSFER => $this->returnTransfer,
             CURLOPT_HTTPHEADER => $this->headers,
             CURLOPT_HEADER => true,
             CURLINFO_HEADER_OUT => true,
@@ -177,10 +178,13 @@ class Request implements RequestInterface
             CURLOPT_TIMEOUT => $this->timeout,
         );
 
-		//digest auth support
+        //digest auth support
         if(count($this->digestAuth) > 0)  {
             $cURLOptions[CURLOPT_HTTPAUTH] = CURLAUTH_DIGEST;
             $cURLOptions[CURLOPT_USERPWD] =  $this->digestAuth['username'] . ":" . $this->digestAuth['password'];
+        } else if (count($this->basicAuth) > 0) {
+            $cURLOptions[CURLOPT_HTTPAUTH] = CURLAUTH_BASIC;
+            $cURLOptions[CURLOPT_USERPWD] =  $this->basicAuth['username'] . ":" . $this->basicAuth['password'];
         }
 
         if ($this->method === static::method('POST')
