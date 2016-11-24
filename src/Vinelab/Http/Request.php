@@ -118,13 +118,13 @@ class Request implements RequestInterface
 
     /**
      * Digest Auth
-     * @var boolean
+     * @var array
      */
     public $digestAuth = [];
 
     /**
      * Basic Auth
-     * @var boolean
+     * @var array
      */
     public $basicAuth = [];
 
