@@ -18,7 +18,7 @@ class HttpServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app['vinelab.httpclient'] = $this->app->share(function ($app) {
+        $this->app->singleton('vinelab.httpclient',function ($app) {
             return new Client();
         });
 
