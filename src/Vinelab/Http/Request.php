@@ -177,6 +177,8 @@ class Request implements RequestInterface
             CURLOPT_MAXREDIRS => $this->maxRedirects,
             CURLOPT_TIMEOUT => $this->timeout,
             CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_SSL_VERIFYPEER=>false,
+            CURLOPT_SSL_VERIFYHOST=>false
         );
 
         //digest auth support
