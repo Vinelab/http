@@ -13,7 +13,7 @@
 	"require": {
 		"php": ">=5.6.4",
 		"illuminate/support": "*",
-		"tolerance/tolerance": "^0.3.3"
+		"tolerance/tolerance": "^0.4.0"
 	},
 
 	"require-dev": {
