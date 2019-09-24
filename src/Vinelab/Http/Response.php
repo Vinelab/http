@@ -152,6 +152,7 @@ class Response implements ResponseInterface
         if (array_key_exists(strtolower($name), $this->caseInsensitiveHeaders)) {
             return $this->caseInsensitiveHeaders[strtolower($name)];
         }
+        
         return null;
     }
 
