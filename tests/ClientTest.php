@@ -37,6 +37,10 @@ class ClientTest extends PHPUnit_Framework_TestCase
 
         $this->assertArrayHasKey('Content-Type', $headers);
         $this->assertEquals('application/json', $headers['Content-Type']);
+
+        // RFC7230 case-insensitive header fields
+        $testResponse = $this->client->get($request);
+        $this->assertEquals($testResponse->header('content-type'), $testResponse->header('Content-Type'));
     }
 
     public function testGetRequestWithoutParams()

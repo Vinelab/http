@@ -46,6 +46,7 @@ class Response implements ResponseInterface
             $this->info = curl_getinfo($cURL);
             $this->headers = $this->parseHeaders($response, $this->info['header_size']);
             $this->content = $this->parseBody($response, $this->info['header_size']);
+            $this->caseInsensitiveHeaders = array_change_key_case($this->headers);
         } else {
             throw new HttpClientRequestFailedException(curl_error($cURL));
         }
@@ -148,7 +149,11 @@ class Response implements ResponseInterface
      */
     public function header($name)
     {
-        return (array_key_exists($name, $this->headers)) ? $this->headers[$name] : null;
+        if (array_key_exists(strtolower($name), $this->caseInsensitiveHeaders)) {
+            return $this->caseInsensitiveHeaders[strtolower($name)];
+        }
+        
+        return null;
     }
 
     /**
